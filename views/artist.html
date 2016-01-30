@@ -20,11 +20,10 @@
     <script src="http://dimplejs.org/dist/dimple.v2.1.6.min.js"></script>
     <script>
       function draw(data) {
-        console.log(data)
         var svg = dimple.newSvg("body", 800, 600);
         var chart = new dimple.chart(svg, data);
-        chart.addCategoryAxis("x", "Artist");
-        chart.addMeasureAxis("y", "Popularity");
+        chart.addCategoryAxis("x", "name");
+        chart.addMeasureAxis("y", "popularity");
         chart.addSeries(null, dimple.plot.bar);
         chart.draw();
       }
@@ -37,17 +36,31 @@
 </head>
 <body>
     <div class="container">
-      <svg class="chart"></svg>
-        <script type="text/javascript">
-
-        d3.json("artist.json", function(error, json) {
-          if (error) return console.warn(error);
-          var data = json;
-          draw(data);
-        });
-
-        </script>
+      <div class="col-lg-6">
+        <h4>{{artist.name}}</h4>
+        <h6><a href={{artist.external_urls.spotify}}>Listen</a></h6>
+        <img src={{artist.images[0].url}} height="100">
+      </div>
+      <div class="col-lg-6">
+        <br>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{artist.popularity}}%;">
+            Popularity: {{artist.popularity}} 
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart"></div>
     </div><!-- /.container -->
+    <script type="text/javascript">
+        // draw([{"Artist":"Kanye West","Popularity":89}])
+      d3.json("../public/tracks.txt", function(error, json) {
+        if (error) return console.error(error);
+        console.log(json)
+        var data = json;
+        draw(data);
+      });
+    </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
